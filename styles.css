@@ -1,0 +1,91 @@
+/* RESET GENERAL */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ESTILO GENERAL DEL SITIO */
+body{
+    background: #f1f5f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* HEADER */
+header{
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: black;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* MENU NAVEGACION */
+nav{
+    background: #0ea5e9;
+    height: 50px;
+    border-bottom: 3px solid #0369a1;
+}
+
+nav ul li{
+    float: left;
+    list-style: none;
+    margin: 10px 20px;
+    line-height: 30px;
+}
+
+nav ul li a{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover{
+    color: #fde047;
+}
+
+/* LIMPIAR FLOTANTES */
+.clearfix{
+    clear: both;
+}
+
+/* CONTENIDO PRINCIPAL */
+#content{
+    float: left;
+    width: 80%;
+    background: white;
+    min-height: 500px;
+    padding: 25px;
+    border-radius: 8px;
+}
+
+/* ARTICULOS */
+.article{
+    color: #334155;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 12px;
+}
+
+/* BARRA LATERAL */
+aside{
+    float: left;
+    width: 20%;
+    background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+    color: white;
+    min-height: 500px;
+    padding: 20px;
+}
+
+/* FOOTER */
+footer{
+    background: #1e293b;
+    color: white;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    margin-top: 10px;
+}
