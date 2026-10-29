@@ -16,15 +16,15 @@
    VARIABLES DE TEMA (hielo / ángel, tomadas del video de fondo)
 =================================== */
 :root{
-    --fondo: #0d111a;          /* azul-negro del fondo del video */
+    --fondo: #030a13;          /* azul-negro del fondo del video */
     --hielo: #e6f2f8;          /* blanco hielo del halo */
-    --cristal: #b7cadb;        /* azul cristal de la máscara */
-    --acero: #89a6b6;          /* azul acero de la ropa */
-    --profundo: #3d5a6e;       /* azul profundo para sombras */
-    --vidrio: rgba(13, 17, 26, 0.55);
-    --vidrio-borde: rgba(183, 202, 219, 0.14);
+    --cristal: #a8c6ec;        /* azul cristal de la máscara */
+    --acero: #7cb3ea;          /* azul de la ropa */
+    --profundo: #24507d;       /* azul profundo para sombras */
+    --vidrio: rgba(3, 10, 19, 0.55);
+    --vidrio-borde: rgba(168, 198, 236, 0.14);
     --texto-claro: #eef4f8;
-    --texto-suave: #a9b8c4;
+    --texto-suave: #a3b9d1;
     --alto-cabecera: 160px;    /* se recalcula con JS */
 }
 
@@ -71,7 +71,7 @@ body{
 }
 
 body.difuminado .fondo-video{
-    filter: blur(16px) brightness(0.55);
+    filter: blur(16px) brightness(0.7);
     transform: scale(1.08);
 }
 
@@ -79,7 +79,7 @@ body.difuminado .fondo-video{
    HEADER
 =================================== */
 header{
-    background: linear-gradient(180deg, rgba(13, 17, 26, 0.95), rgba(13, 17, 26, 0.7));
+    background: linear-gradient(180deg, rgba(3, 10, 19, 0.95), rgba(3, 10, 19, 0.7));
     color: var(--hielo);
     height: 110px;
     text-align: center;
@@ -88,7 +88,7 @@ header{
     font-size: 32px;
     font-weight: 700;
     letter-spacing: 2px;
-    text-shadow: 0 0 18px rgba(230, 242, 248, 0.45), 0 0 40px rgba(137, 166, 182, 0.35);
+    text-shadow: 0 0 18px rgba(230, 242, 248, 0.45), 0 0 40px rgba(124, 179, 234, 0.35);
     animation: brillo 6s ease-in-out infinite;
 }
 
@@ -104,8 +104,8 @@ header{
 }
 
 @keyframes brillo{
-    0%, 100%{ text-shadow: 0 0 18px rgba(230, 242, 248, 0.45), 0 0 40px rgba(137, 166, 182, 0.35); }
-    50%{ text-shadow: 0 0 26px rgba(230, 242, 248, 0.7), 0 0 60px rgba(137, 166, 182, 0.5); }
+    0%, 100%{ text-shadow: 0 0 18px rgba(230, 242, 248, 0.45), 0 0 40px rgba(124, 179, 234, 0.35); }
+    50%{ text-shadow: 0 0 26px rgba(230, 242, 248, 0.7), 0 0 60px rgba(124, 179, 234, 0.5); }
 }
 
 /* ===================================
@@ -114,7 +114,7 @@ header{
 nav{
     position: relative;
     z-index: 100;
-    background: rgba(13, 17, 26, 0.7);
+    background: rgba(3, 10, 19, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--vidrio-borde);
@@ -188,7 +188,7 @@ nav{
     left: 0;
     min-width: 210px;
     list-style: none;
-    background: rgba(13, 17, 26, 0.92);
+    background: rgba(3, 10, 19, 0.92);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--vidrio-borde);
@@ -227,7 +227,7 @@ nav{
 }
 
 .dropdown-menu a:hover{
-    background: rgba(183, 202, 219, 0.12);
+    background: rgba(168, 198, 236, 0.12);
     color: var(--hielo);
     transform: translateX(4px);
 }
@@ -297,7 +297,7 @@ nav{
 
 .gallery-item:hover{
     transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 14px 32px rgba(183, 202, 219, 0.25);
+    box-shadow: 0 14px 32px rgba(168, 198, 236, 0.25);
 }
 
 /* ===================================
@@ -308,7 +308,7 @@ nav{
     position: fixed;
     inset: 0;
     z-index: 999;
-    background: rgba(8, 11, 17, 0.85);
+    background: rgba(1, 5, 11, 0.85);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     align-items: center;
@@ -387,5 +387,5 @@ nav{
 
 .lightbox-download:hover{
     transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(183, 202, 219, 0.45);
+    box-shadow: 0 0 20px rgba(168, 198, 236, 0.45);
 }

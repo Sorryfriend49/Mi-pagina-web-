@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
     <radialGradient id="fondo" cx="50%" cy="45%" r="65%">
-      <stop offset="0" stop-color="#22303f"/>
-      <stop offset="1" stop-color="#0d111a"/>
+      <stop offset="0" stop-color="#14324f"/>
+      <stop offset="1" stop-color="#030a13"/>
     </radialGradient>
     <linearGradient id="cristal" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#f4fbff"/>
-      <stop offset="0.55" stop-color="#b7cadb"/>
-      <stop offset="1" stop-color="#6f8ea1"/>
+      <stop offset="0.55" stop-color="#a8c6ec"/>
+      <stop offset="1" stop-color="#4f86c0"/>
     </linearGradient>
     <filter id="brillo" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="1.6" result="b"/>
@@ -27,5 +27,5 @@
 
   <!-- Destellos -->
   <circle cx="47" cy="27" r="1.6" fill="#e6f2f8"/>
-  <circle cx="17" cy="30" r="1.1" fill="#b7cadb"/>
+  <circle cx="17" cy="30" r="1.1" fill="#a8c6ec"/>
 </svg>
