@@ -13,6 +13,13 @@
 
 <body>
 
+    <!-- FONDO GLOBAL: blobs fijos, siempre visibles sin importar la sección -->
+    <div class="fondo-global" aria-hidden="true">
+        <span class="blob blob-1"></span>
+        <span class="blob blob-2"></span>
+        <span class="blob blob-3"></span>
+    </div>
+
     <header>
         <h1>Maquetación con CSS</h1>
     </header>
@@ -92,17 +99,7 @@
 
     <main>
 
-        <section id="inicio" class="bienvenida">
-            <div class="bienvenida-fondo" aria-hidden="true">
-                <span class="blob blob-1"></span>
-                <span class="blob blob-2"></span>
-                <span class="blob blob-3"></span>
-            </div>
-            <div class="bienvenida-contenido">
-                <h2>Bienvenida</h2>
-                <p>Un rincón personal para explorar diseño, código y arte.</p>
-            </div>
-        </section>
+        <section id="inicio"></section>
 
         <section id="contenido" class="gallery oculta">
             <h2>Galería</h2>

@@ -35,48 +35,87 @@ html, body{
 
 body{
     background: var(--fondo);
-    background-image:
-        radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.35), transparent 40%),
-        radial-gradient(circle at 85% 10%, rgba(34, 211, 238, 0.3), transparent 45%),
-        radial-gradient(circle at 50% 90%, rgba(244, 114, 182, 0.25), transparent 50%);
-    background-attachment: fixed;
     font-family: 'Poppins', sans-serif;
     color: var(--texto-claro);
     overflow-x: hidden;
     position: relative;
 }
 
-/* Blobs flotantes decorativos (sensación "fluida") */
-body::before,
-body::after{
-    content: "";
+/* ===================================
+   FONDO GLOBAL (blobs tipo lava lamp, fijos)
+   Visible siempre detrás de todo, sin importar la sección o el scroll
+=================================== */
+.fondo-global{
     position: fixed;
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    filter: blur(90px);
-    opacity: 0.35;
+    inset: 0;
     z-index: -1;
-    animation: flotar 12s ease-in-out infinite;
+    overflow: hidden;
+    pointer-events: none;
+    background: var(--fondo);
 }
 
-body::before{
+.blob{
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    animation: moverBlob 20s ease-in-out infinite;
+}
+
+.blob-1{
+    width: 42vw;
+    height: 42vw;
     background: var(--cian);
-    top: -120px;
-    left: -120px;
-    animation-delay: 0s;
+    top: -10vw;
+    left: -10vw;
+    animation-duration: 18s;
 }
 
-body::after{
+.blob-2{
+    width: 48vw;
+    height: 48vw;
+    background: var(--violeta);
+    bottom: -14vw;
+    right: -12vw;
+    animation-duration: 24s;
+    animation-delay: -6s;
+}
+
+.blob-3{
+    width: 34vw;
+    height: 34vw;
     background: var(--rosa);
-    bottom: -140px;
-    right: -100px;
-    animation-delay: 4s;
+    top: 35%;
+    left: 50%;
+    animation-duration: 21s;
+    animation-delay: -12s;
 }
 
-@keyframes flotar{
-    0%, 100%{ transform: translate(0, 0) scale(1); }
-    50%{ transform: translate(40px, -30px) scale(1.1); }
+@keyframes moverBlob{
+    0%, 100%{
+        transform: translate(0, 0) scale(1);
+        border-radius: 50%;
+    }
+    25%{
+        transform: translate(5vw, -4vw) scale(1.15);
+        border-radius: 46% 54% 60% 40% / 50% 45% 55% 50%;
+    }
+    50%{
+        transform: translate(-3vw, 4vw) scale(0.9);
+        border-radius: 60% 40% 45% 55% / 40% 60% 40% 60%;
+    }
+    75%{
+        transform: translate(-5vw, -3vw) scale(1.1);
+        border-radius: 40% 60% 50% 50% / 55% 45% 55% 45%;
+    }
+}
+
+/* Respeta a quien prefiere menos movimiento en pantalla */
+@media (prefers-reduced-motion: reduce){
+    .blob{
+        animation: none;
+    }
 }
 
 /* ===================================
@@ -225,110 +264,10 @@ nav{
 }
 
 /* ===================================
-   SECCION BIENVENIDA (fondo animado tipo lava lamp)
+   SECCION INICIO (sin contenido propio: deja ver el fondo global)
 =================================== */
-#inicio.bienvenida{
-    position: relative;
-    overflow: hidden;
-    max-width: 1100px;
-    margin: 48px auto 0;
-    padding: 90px 36px;
-    border-radius: 24px;
-    text-align: center;
-    background: #120a21;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
-}
-
-.bienvenida-fondo{
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-}
-
-.blob{
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    mix-blend-mode: screen;
-    opacity: 0.8;
-    animation: moverBlob 20s ease-in-out infinite;
-}
-
-.blob-1{
-    width: 340px;
-    height: 340px;
-    background: var(--cian);
-    top: -80px;
-    left: -60px;
-    animation-duration: 18s;
-}
-
-.blob-2{
-    width: 400px;
-    height: 400px;
-    background: var(--violeta);
-    bottom: -100px;
-    right: -80px;
-    animation-duration: 24s;
-    animation-delay: -6s;
-}
-
-.blob-3{
-    width: 280px;
-    height: 280px;
-    background: var(--rosa);
-    top: 35%;
-    left: 50%;
-    animation-duration: 21s;
-    animation-delay: -12s;
-}
-
-@keyframes moverBlob{
-    0%, 100%{
-        transform: translate(0, 0) scale(1);
-        border-radius: 50%;
-    }
-    25%{
-        transform: translate(50px, -35px) scale(1.15);
-        border-radius: 46% 54% 60% 40% / 50% 45% 55% 50%;
-    }
-    50%{
-        transform: translate(-25px, 35px) scale(0.9);
-        border-radius: 60% 40% 45% 55% / 40% 60% 40% 60%;
-    }
-    75%{
-        transform: translate(-45px, -25px) scale(1.1);
-        border-radius: 40% 60% 50% 50% / 55% 45% 55% 45%;
-    }
-}
-
-.bienvenida-contenido{
-    position: relative;
-    z-index: 1;
-    display: inline-block;
-    padding: 26px 36px;
-    border-radius: 20px;
-    background: rgba(15, 18, 34, 0.4);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-.bienvenida-contenido h2{
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 28px;
-    margin-bottom: 10px;
-}
-
-.bienvenida-contenido p{
-    color: var(--texto-suave);
-}
-
-/* Respeta a quien prefiere menos movimiento en pantalla */
-@media (prefers-reduced-motion: reduce){
-    .blob{
-        animation: none;
-    }
+#inicio{
+    min-height: 100vh;
 }
 
 /* ===================================
