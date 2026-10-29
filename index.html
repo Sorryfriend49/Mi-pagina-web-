@@ -166,8 +166,14 @@
             e.preventDefault();
             seccionContenido.classList.remove('oculta');
             seccionContenido.classList.add('visible');
+            // Doble requestAnimationFrame: asegura que el navegador ya terminó
+            // de calcular el nuevo alto de la sección (antes estaba display:none)
+            // antes de hacer scroll, para que siempre quede alineada justo
+            // arriba del todo (de arriba hacia abajo) y no a mitad de camino.
             requestAnimationFrame(() => {
-                seccionContenido.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                requestAnimationFrame(() => {
+                    seccionContenido.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
             });
         });
 
