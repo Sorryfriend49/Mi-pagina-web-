@@ -224,120 +224,29 @@ nav{
     transform: translateX(4px);
 }
 
-/* LIMPIAR FLOTANTES */
-.clearfix{
-    clear: both;
-}
-
 /* ===================================
    CONTENIDO PRINCIPAL
 =================================== */
 #content{
-    float: left;
-    width: 80%;
+    max-width: 1100px;
+    margin: 48px auto;
     background: var(--panel);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    min-height: 500px;
-    padding: 30px;
-    border-radius: 24px 8px 24px 8px;
+    padding: 36px;
+    border-radius: 24px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
-}
-
-/* ===================================
-   ARTICULOS
-=================================== */
-.article{
-    color: var(--texto-suave);
-    margin-top: 15px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    padding-bottom: 14px;
-    transition: transform 0.25s ease, color 0.25s ease;
-}
-
-.article:hover{
-    transform: translateX(6px);
-    color: var(--texto-claro);
-}
-
-/* ===================================
-   BARRA LATERAL
-=================================== */
-aside{
-    float: left;
-    width: 20%;
-    background: linear-gradient(180deg, var(--violeta), var(--rosa));
-    color: #fff;
-    min-height: 500px;
-    padding: 24px 20px;
-    border-radius: 8px 24px 8px 24px;
-    box-shadow: 0 10px 30px rgba(244, 114, 182, 0.25);
-}
-
-/* ===================================
-   UTILIDAD: solo para lectores de pantalla
-=================================== */
-.sr-only{
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
-/* ===================================
-   FORMULARIO (barra lateral)
-=================================== */
-aside input[type="text"]{
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-}
-
-aside input[type="text"]::placeholder{
-    color: rgba(255, 255, 255, 0.7);
-}
-
-aside button{
-    width: 100%;
-    padding: 10px 12px;
-    border: none;
-    border-radius: 10px;
-    background: var(--cian);
-    color: #0f1222;
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-aside button:hover{
-    background: var(--rosa);
-    transform: translateY(-2px);
 }
 
 /* ===================================
    GALERIA
 =================================== */
-.gallery{
-    margin-top: 25px;
-}
-
 .gallery h2{
     font-family: 'Baloo 2', sans-serif;
+    font-size: 22px;
     color: var(--texto-claro);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .gallery-grid{
@@ -456,19 +365,4 @@ aside button:hover{
 .lightbox-download:hover{
     transform: translateY(-2px);
     box-shadow: 0 10px 24px rgba(124, 58, 237, 0.4);
-}
-
-/* ===================================
-   FOOTER
-=================================== */
-footer{
-    background: rgba(15, 18, 34, 0.85);
-    backdrop-filter: blur(10px);
-    color: var(--texto-suave);
-    text-align: center;
-    height: 55px;
-    line-height: 55px;
-    margin-top: 10px;
-    border-top: 2px solid rgba(124, 58, 237, 0.4);
-    font-family: 'Baloo 2', sans-serif;
 }
