@@ -119,6 +119,15 @@
                 <figure class="gallery-item">
                     <img src="Images/illust_100641790_20260103_205830.png" alt="Ilustración estilo anime" loading="lazy">
                 </figure>
+                <figure class="gallery-item">
+                    <img src="Images/chica-maid-rosa.jpg" alt="Chica de pelo rosa con traje de maid" loading="lazy">
+                </figure>
+                <figure class="gallery-item">
+                    <img src="Images/chibi-pulgar.webp" alt="Chibi de pelo rosa con el pulgar arriba" loading="lazy">
+                </figure>
+                <figure class="gallery-item">
+                    <img src="Images/chica-lentes-corona.jpg" alt="Chica de pelo plateado con lentes y corona" loading="lazy">
+                </figure>
             </div>
         </section>
 
@@ -205,6 +214,13 @@
         function ajustarAltoCabecera(){
             const alto = cabecera.offsetHeight + menu.offsetHeight;
             document.documentElement.style.setProperty('--alto-cabecera', alto + 'px');
+
+            // Si un desplegable no cabe a la derecha (p. ej. en celular), se abre hacia la izquierda
+            navItems.forEach(item => {
+                const panel = item.querySelector('.dropdown-menu');
+                const izquierda = item.getBoundingClientRect().left;
+                item.classList.toggle('abre-izquierda', izquierda + panel.offsetWidth > window.innerWidth - 8);
+            });
         }
         ajustarAltoCabecera();
         window.addEventListener('resize', ajustarAltoCabecera);
@@ -214,7 +230,6 @@
             document.getElementById('fondoVideo').pause();
         }
 
-        const galleryImgs = document.querySelectorAll('.gallery-item img');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightboxImg');
         const lightboxDownload = document.getElementById('lightboxDownload');
@@ -232,12 +247,30 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Fuerza la descarga directa (funciona automáticamente una vez el sitio
-        // esté publicado en GitHub Pages). Si el navegador bloquea el canvas
-        // por estar viendo el archivo en local (file://), abre la imagen en una
-        // pestaña aparte en vez de reemplazar la página actual.
-        function descargarImagenActual(){
-            // Si la imagen aún no terminó de cargar, no hay nada que dibujar todavía.
+        function guardarBlob(blob, nombre){
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = nombre;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        // Descarga la imagen sin salir de la página.
+        // 1) Baja el archivo original tal cual (mismo formato y calidad).
+        // 2) Si eso falla (p. ej. abriendo el HTML en local con file://),
+        //    redibuja la imagen en un canvas y la guarda.
+        // 3) Si el navegador también bloquea eso, la abre en una pestaña aparte.
+        async function descargarImagenActual(){
+            try{
+                const respuesta = await fetch(currentImgUrl);
+                if (!respuesta.ok) throw new Error('sin respuesta');
+                guardarBlob(await respuesta.blob(), currentImgName);
+                return;
+            } catch (err){ /* seguimos con el plan B */ }
+
             if (!lightboxImg.complete || lightboxImg.naturalWidth === 0){
                 alert('La imagen todavía está cargando, espera un segundo e inténtalo de nuevo.');
                 return;
@@ -246,28 +279,18 @@
             const canvas = document.createElement('canvas');
             canvas.width = lightboxImg.naturalWidth;
             canvas.height = lightboxImg.naturalHeight;
-            const ctx = canvas.getContext('2d');
+            const extension = currentImgName.split('.').pop().toLowerCase();
+            const tipo = extension === 'png' ? 'image/png'
+                       : extension === 'webp' ? 'image/webp'
+                       : 'image/jpeg';
 
             try{
-                ctx.drawImage(lightboxImg, 0, 0);
+                canvas.getContext('2d').drawImage(lightboxImg, 0, 0);
                 canvas.toBlob((blob) => {
-                    if (!blob){
-                        abrirEnPestañaNueva();
-                        return;
-                    }
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = currentImgName;
-                    a.target = '_blank';
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    URL.revokeObjectURL(url);
-                });
+                    if (blob) guardarBlob(blob, currentImgName);
+                    else abrirEnPestañaNueva();
+                }, tipo, 0.95);
             } catch (err){
-                // Canvas bloqueado (típico al ver el archivo en local con file://):
-                // abrimos la imagen en una pestaña nueva en vez de salir de la página.
                 abrirEnPestañaNueva();
             }
         }
@@ -292,8 +315,8 @@
             document.body.style.overflow = '';
         }
 
-        galleryImgs.forEach(img => {
-            img.addEventListener('click', () => openLightbox(img));
+        document.querySelectorAll('.gallery-item').forEach(recuadro => {
+            recuadro.addEventListener('click', () => openLightbox(recuadro.querySelector('img')));
         });
 
         lightboxClose.addEventListener('click', closeLightbox);
