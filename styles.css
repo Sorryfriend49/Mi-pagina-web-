@@ -225,11 +225,35 @@ nav{
 }
 
 /* ===================================
+   SECCION BIENVENIDA (fondo por definir)
+=================================== */
+#inicio.bienvenida{
+    max-width: 1100px;
+    margin: 48px auto 0;
+    padding: 60px 36px;
+    border-radius: 24px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+    /* TODO: definir imagen/color de fondo para esta sección */
+}
+
+#inicio.bienvenida h2{
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+#inicio.bienvenida p{
+    color: var(--texto-suave);
+}
+
+/* ===================================
    CONTENIDO PRINCIPAL
 =================================== */
-#content{
+#contenido{
     max-width: 1100px;
-    margin: 48px auto;
+    margin: 32px auto 48px;
     background: var(--panel);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
