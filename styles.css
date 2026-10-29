@@ -92,6 +92,17 @@ header{
     animation: brillo 6s ease-in-out infinite;
 }
 
+.titulo-link{
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease, letter-spacing 0.3s ease;
+}
+
+.titulo-link:hover{
+    color: #ffffff;
+    letter-spacing: 3px;
+}
+
 @keyframes brillo{
     0%, 100%{ text-shadow: 0 0 18px rgba(230, 242, 248, 0.45), 0 0 40px rgba(137, 166, 182, 0.35); }
     50%{ text-shadow: 0 0 26px rgba(230, 242, 248, 0.7), 0 0 60px rgba(137, 166, 182, 0.5); }

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="fondo" cx="50%" cy="45%" r="65%">
+      <stop offset="0" stop-color="#22303f"/>
+      <stop offset="1" stop-color="#0d111a"/>
+    </radialGradient>
+    <linearGradient id="cristal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4fbff"/>
+      <stop offset="0.55" stop-color="#b7cadb"/>
+      <stop offset="1" stop-color="#6f8ea1"/>
+    </linearGradient>
+    <filter id="brillo" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="64" height="64" rx="14" fill="url(#fondo)"/>
+
+  <!-- Halo -->
+  <ellipse cx="32" cy="17" rx="15" ry="5" fill="none" stroke="#e6f2f8" stroke-width="3" filter="url(#brillo)"/>
+
+  <!-- Cristal de hielo (estrella de 4 puntas) -->
+  <path d="M32 24 L37 38 L50 42 L37 46 L32 58 L27 46 L14 42 L27 38 Z" fill="url(#cristal)" filter="url(#brillo)"/>
+  <path d="M32 24 L32 58 M14 42 L50 42" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1"/>
+
+  <!-- Destellos -->
+  <circle cx="47" cy="27" r="1.6" fill="#e6f2f8"/>
+  <circle cx="17" cy="30" r="1.1" fill="#b7cadb"/>
+</svg>

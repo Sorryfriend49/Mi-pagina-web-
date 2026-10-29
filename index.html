@@ -7,6 +7,12 @@
     <meta name="description" content="Sitio personal de Sorry — maquetación con CSS.">
     <title>Maquetación CSS</title>
 
+    <!-- ICONO DE LA PESTAÑA -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="theme-color" content="#0d111a">
+
     <!-- AQUI SE CONECTA EL CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -21,7 +27,7 @@
     </div>
 
     <header>
-        <h1>Maquetación con CSS</h1>
+        <h1><a href="#inicio" id="linkTitulo" class="titulo-link">Maquetación con CSS</a></h1>
     </header>
 
     <nav aria-label="Navegación principal">
@@ -183,6 +189,13 @@
                 mostrarApartado(enlace.id === 'linkRecursos', esInicio);
                 setTimeout(cerrarMenus, 150);
             });
+        });
+
+        // El título "Maquetación con CSS" lleva de vuelta a Inicio
+        document.getElementById('linkTitulo').addEventListener('click', (e) => {
+            e.preventDefault();
+            mostrarApartado(false, true);
+            cerrarMenus();
         });
 
         // ===== VIDEO DE FONDO =====
