@@ -1,32 +1,124 @@
-/* RESET GENERAL */
+/* ===================================
+   FUENTES
+=================================== */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Poppins:wght@300;400;500;600&display=swap');
+
+/* ===================================
+   RESET GENERAL
+=================================== */
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ESTILO GENERAL DEL SITIO */
+/* ===================================
+   VARIABLES DE TEMA (anime / fluido)
+=================================== */
+:root{
+    --azul: #38bdf8;
+    --cian: #22d3ee;
+    --violeta: #7c3aed;
+    --rosa: #f472b6;
+    --fondo: #0f1222;
+    --panel: rgba(255, 255, 255, 0.06);
+    --texto-claro: #f1f5f9;
+    --texto-suave: #cbd5e1;
+}
+
+/* ===================================
+   ESTILO GENERAL DEL SITIO
+=================================== */
+html, body{
+    height: 100%;
+}
+
 body{
-    background: #f1f5f9;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--fondo);
+    background-image:
+        radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.35), transparent 40%),
+        radial-gradient(circle at 85% 10%, rgba(34, 211, 238, 0.3), transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(244, 114, 182, 0.25), transparent 50%);
+    background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
+    color: var(--texto-claro);
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* HEADER */
+/* Blobs flotantes decorativos (sensación "fluida") */
+body::before,
+body::after{
+    content: "";
+    position: fixed;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+    z-index: -1;
+    animation: flotar 12s ease-in-out infinite;
+}
+
+body::before{
+    background: var(--cian);
+    top: -120px;
+    left: -120px;
+    animation-delay: 0s;
+}
+
+body::after{
+    background: var(--rosa);
+    bottom: -140px;
+    right: -100px;
+    animation-delay: 4s;
+}
+
+@keyframes flotar{
+    0%, 100%{ transform: translate(0, 0) scale(1); }
+    50%{ transform: translate(40px, -30px) scale(1.1); }
+}
+
+/* ===================================
+   HEADER
+=================================== */
 header{
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
-    color: black;
-    height: 100px;
+    background: linear-gradient(135deg, var(--cian), var(--violeta) 55%, var(--rosa));
+    background-size: 200% 200%;
+    animation: gradiente 8s ease infinite;
+    color: #0f1222;
+    height: 110px;
     text-align: center;
-    line-height: 100px;
-    font-size: 28px;
-    font-weight: bold;
+    line-height: 110px;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.35);
 }
 
-/* MENU NAVEGACION */
+@keyframes gradiente{
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+}
+
+/* ===================================
+   MENU NAVEGACION
+=================================== */
 nav{
-    background: #0ea5e9;
-    height: 50px;
-    border-bottom: 3px solid #0369a1;
+    background: rgba(15, 18, 34, 0.75);
+    backdrop-filter: blur(10px);
+    height: 55px;
+    border-bottom: 2px solid rgba(34, 211, 238, 0.4);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+nav ul{
+    display: flex;
 }
 
 nav ul li{
@@ -37,13 +129,31 @@ nav ul li{
 }
 
 nav ul li a{
-    color: white;
+    color: var(--texto-claro);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
+    font-family: 'Baloo 2', sans-serif;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+nav ul li a::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cian), var(--rosa));
+    transition: width 0.3s ease;
 }
 
 nav ul li a:hover{
-    color: #fde047;
+    color: var(--cian);
+}
+
+nav ul li a:hover::after{
+    width: 100%;
 }
 
 /* LIMPIAR FLOTANTES */
@@ -51,41 +161,246 @@ nav ul li a:hover{
     clear: both;
 }
 
-/* CONTENIDO PRINCIPAL */
+/* ===================================
+   CONTENIDO PRINCIPAL
+=================================== */
 #content{
     float: left;
     width: 80%;
-    background: white;
+    background: var(--panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     min-height: 500px;
-    padding: 25px;
-    border-radius: 8px;
+    padding: 30px;
+    border-radius: 24px 8px 24px 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* ARTICULOS */
+/* ===================================
+   ARTICULOS
+=================================== */
 .article{
-    color: #334155;
+    color: var(--texto-suave);
     margin-top: 15px;
     margin-bottom: 15px;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 14px;
+    transition: transform 0.25s ease, color 0.25s ease;
 }
 
-/* BARRA LATERAL */
+.article:hover{
+    transform: translateX(6px);
+    color: var(--texto-claro);
+}
+
+/* ===================================
+   BARRA LATERAL
+=================================== */
 aside{
     float: left;
     width: 20%;
-    background: linear-gradient(180deg, #38bdf8, #0ea5e9);
-    color: white;
+    background: linear-gradient(180deg, var(--violeta), var(--rosa));
+    color: #fff;
     min-height: 500px;
-    padding: 20px;
+    padding: 24px 20px;
+    border-radius: 8px 24px 8px 24px;
+    box-shadow: 0 10px 30px rgba(244, 114, 182, 0.25);
 }
 
-/* FOOTER */
+/* ===================================
+   UTILIDAD: solo para lectores de pantalla
+=================================== */
+.sr-only{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ===================================
+   FORMULARIO (barra lateral)
+=================================== */
+aside input[type="text"]{
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
+aside input[type="text"]::placeholder{
+    color: rgba(255, 255, 255, 0.7);
+}
+
+aside button{
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--cian);
+    color: #0f1222;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+aside button:hover{
+    background: var(--rosa);
+    transform: translateY(-2px);
+}
+
+/* ===================================
+   GALERIA
+=================================== */
+.gallery{
+    margin-top: 25px;
+}
+
+.gallery h2{
+    font-family: 'Baloo 2', sans-serif;
+    color: var(--texto-claro);
+    margin-bottom: 15px;
+}
+
+.gallery-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.gallery-item{
+    margin: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item img{
+    display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    cursor: zoom-in;
+}
+
+.gallery-item:hover{
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 14px 32px rgba(34, 211, 238, 0.35);
+}
+
+/* ===================================
+   LIGHTBOX (visor de imagen ampliada)
+=================================== */
+.lightbox{
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(5, 6, 15, 0.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    animation: lightbox-fade 0.25s ease;
+}
+
+.lightbox.active{
+    display: flex;
+}
+
+@keyframes lightbox-fade{
+    from{ opacity: 0; }
+    to{ opacity: 1; }
+}
+
+.lightbox-content{
+    position: relative;
+    max-width: min(900px, 90vw);
+    max-height: 85vh;
+    background: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-content img{
+    max-width: 100%;
+    max-height: 65vh;
+    border-radius: 14px;
+    object-fit: contain;
+}
+
+.lightbox-close{
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cian), var(--rosa));
+    color: #0f1222;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.lightbox-close:hover{
+    transform: scale(1.1) rotate(90deg);
+}
+
+.lightbox-download{
+    display: inline-block;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--cian), var(--violeta));
+    color: #fff;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lightbox-download:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(124, 58, 237, 0.4);
+}
+
+/* ===================================
+   FOOTER
+=================================== */
 footer{
-    background: #1e293b;
-    color: white;
+    background: rgba(15, 18, 34, 0.85);
+    backdrop-filter: blur(10px);
+    color: var(--texto-suave);
     text-align: center;
-    height: 50px;
-    line-height: 50px;
+    height: 55px;
+    line-height: 55px;
     margin-top: 10px;
+    border-top: 2px solid rgba(124, 58, 237, 0.4);
+    font-family: 'Baloo 2', sans-serif;
 }

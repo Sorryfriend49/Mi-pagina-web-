@@ -2,7 +2,9 @@
 <html lang="es">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sitio personal de Sorry — maquetación con CSS.">
     <title>Maquetación CSS</title>
 
     <!-- AQUI SE CONECTA EL CSS -->
@@ -11,61 +13,180 @@
 
 <body>
 
-<header>
-    <h1>Maquetación con CSS</h1>
-</header>
+    <header>
+        <h1>Maquetación con CSS</h1>
+    </header>
 
-<nav>
-    <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Contenido</a></li>
-        <li><a href="#">Requisitos</a></li>
-        <li><a href="#">Lenguajes</a></li>
-        <li><a href="#">Frameworks</a></li>
-        <li><a href="#">Proyectos</a></li>
-    </ul>
-</nav>
+    <nav aria-label="Navegación principal">
+        <ul>
+            <li><a href="#content">Inicio</a></li>
+            <li><a href="#content">Contenido</a></li>
+            <li><a href="#content">Requisitos</a></li>
+            <li><a href="#content">Lenguajes</a></li>
+            <li><a href="#content">Frameworks</a></li>
+            <li><a href="#galeria">Proyectos</a></li>
+        </ul>
+    </nav>
 
-<div class="clearfix"></div>
+    <div class="clearfix"></div>
 
-<section id="content">
+    <main>
 
-    <article class="article">
-        <h2>Título del artículo</h2>
-        <p>Texto del artículo</p>
-    </article>
+        <section id="content">
 
-    <article class="article">
-        <h2>Título del artículo</h2>
-        <p>Texto del artículo</p>
-    </article>
+            <article class="article">
+                <h2>Título del artículo</h2>
+                <p>Texto del artículo</p>
+            </article>
 
-    <article class="article">
-        <h2>Título del artículo</h2>
-        <p>Texto del artículo</p>
-    </article>
+            <article class="article">
+                <h2>Título del artículo</h2>
+                <p>Texto del artículo</p>
+            </article>
 
-</section>
+            <article class="article">
+                <h2>Título del artículo</h2>
+                <p>Texto del artículo</p>
+            </article>
 
-<aside>
-    <h2>Barra lateral</h2>
-    <form>
-        <input type="text">
-        <input type="submit" value="Buscar">
-    </form>
-</aside>
+            <section id="galeria" class="gallery">
+                <h2>Galería</h2>
+                <div class="gallery-grid">
+                    <figure class="gallery-item">
+                        <img src="Images/yeison.png" alt="Ilustración de Yeison" loading="lazy">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="Images/FB_IMG_1771161963658.jpg" alt="Foto guardada desde Facebook" loading="lazy">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="Images/illust_100641790_20260103_205830.png" alt="Ilustración estilo anime" loading="lazy">
+                    </figure>
+                </div>
+            </section>
 
-<div class="clearfix"></div>
+        </section>
 
-<footer>
-    Maquetación con CSS
-</footer>
+        <aside>
+            <h2>Barra lateral</h2>
+            <form action="#" method="get">
+                <label for="buscar" class="sr-only">Buscar</label>
+                <input type="text" id="buscar" name="buscar" placeholder="Buscar...">
+                <button type="submit">Buscar</button>
+            </form>
+        </aside>
+
+    </main>
+
+    <div class="clearfix"></div>
+
+    <footer>
+        <p>&copy; 2026 Maquetación con CSS</p>
+    </footer>
+
+    <!-- LIGHTBOX: visor de imagen ampliada -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">&times;</button>
+            <img id="lightboxImg" src="" alt="">
+            <button id="lightboxDownload" class="lightbox-download" type="button">Descargar imagen</button>
+        </div>
+    </div>
+
+    <script>
+        const galleryImgs = document.querySelectorAll('.gallery-item img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxDownload = document.getElementById('lightboxDownload');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        let currentImgUrl = '';
+        let currentImgName = '';
+
+        function openLightbox(img){
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            currentImgUrl = img.src;
+            currentImgName = img.src.split('/').pop();
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fuerza la descarga directa (funciona automáticamente una vez el sitio
+        // esté publicado en GitHub Pages). Si el navegador bloquea el canvas
+        // por estar viendo el archivo en local (file://), abre la imagen en una
+        // pestaña aparte en vez de reemplazar la página actual.
+        function descargarImagenActual(){
+            // Si la imagen aún no terminó de cargar, no hay nada que dibujar todavía.
+            if (!lightboxImg.complete || lightboxImg.naturalWidth === 0){
+                alert('La imagen todavía está cargando, espera un segundo e inténtalo de nuevo.');
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = lightboxImg.naturalWidth;
+            canvas.height = lightboxImg.naturalHeight;
+            const ctx = canvas.getContext('2d');
+
+            try{
+                ctx.drawImage(lightboxImg, 0, 0);
+                canvas.toBlob((blob) => {
+                    if (!blob){
+                        abrirEnPestañaNueva();
+                        return;
+                    }
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = currentImgName;
+                    a.target = '_blank';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                });
+            } catch (err){
+                // Canvas bloqueado (típico al ver el archivo en local con file://):
+                // abrimos la imagen en una pestaña nueva en vez de salir de la página.
+                abrirEnPestañaNueva();
+            }
+        }
+
+        function abrirEnPestañaNueva(){
+            const nueva = window.open(currentImgUrl, '_blank');
+            if (!nueva){
+                // Si el navegador bloqueó la ventana emergente, al menos intentamos
+                // la descarga directa como último recurso.
+                const a = document.createElement('a');
+                a.href = currentImgUrl;
+                a.download = currentImgName;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }
+        }
+
+        function closeLightbox(){
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        galleryImgs.forEach(img => {
+            img.addEventListener('click', () => openLightbox(img));
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxDownload.addEventListener('click', descargarImagenActual);
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
 
 </body>
-
-<img src="images/yeison.png">
-<img src="images/FB_IMG_1771161963658.jpg">
-<img src="images/illust_100641790_20260103_205830.png">
-
 
 </html>
