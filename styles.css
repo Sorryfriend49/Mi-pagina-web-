@@ -13,17 +13,19 @@
 }
 
 /* ===================================
-   VARIABLES DE TEMA (anime / fluido)
+   VARIABLES DE TEMA (hielo / ángel, tomadas del video de fondo)
 =================================== */
 :root{
-    --azul: #38bdf8;
-    --cian: #22d3ee;
-    --violeta: #7c3aed;
-    --rosa: #f472b6;
-    --fondo: #0f1222;
-    --panel: rgba(255, 255, 255, 0.06);
-    --texto-claro: #f1f5f9;
-    --texto-suave: #cbd5e1;
+    --fondo: #0d111a;          /* azul-negro del fondo del video */
+    --hielo: #e6f2f8;          /* blanco hielo del halo */
+    --cristal: #b7cadb;        /* azul cristal de la máscara */
+    --acero: #89a6b6;          /* azul acero de la ropa */
+    --profundo: #3d5a6e;       /* azul profundo para sombras */
+    --vidrio: rgba(13, 17, 26, 0.55);
+    --vidrio-borde: rgba(183, 202, 219, 0.14);
+    --texto-claro: #eef4f8;
+    --texto-suave: #a9b8c4;
+    --alto-cabecera: 160px;    /* se recalcula con JS */
 }
 
 /* ===================================
@@ -42,8 +44,8 @@ body{
 }
 
 /* ===================================
-   FONDO GLOBAL (blobs tipo lava lamp, fijos)
-   Visible siempre detrás de todo, sin importar la sección o el scroll
+   FONDO GLOBAL (video fijo)
+   Nítido en Inicio, difuminado en los demás apartados
 =================================== */
 .fondo-global{
     position: fixed;
@@ -54,93 +56,45 @@ body{
     background: var(--fondo);
 }
 
-.blob{
+.fondo-video{
     position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    mix-blend-mode: screen;
-    opacity: 0.8;
-    animation: moverBlob 20s ease-in-out infinite;
+    left: 0;
+    top: var(--alto-cabecera);
+    width: 100%;
+    height: calc(100% - var(--alto-cabecera));
+    object-fit: cover;
+    object-position: center top;
+    /* Funde el borde superior con el color de la página para que no se note el corte */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 10%);
+    transition: filter 0.7s ease, transform 0.7s ease;
 }
 
-.blob-1{
-    width: 42vw;
-    height: 42vw;
-    background: var(--cian);
-    top: -10vw;
-    left: -10vw;
-    animation-duration: 18s;
-}
-
-.blob-2{
-    width: 48vw;
-    height: 48vw;
-    background: var(--violeta);
-    bottom: -14vw;
-    right: -12vw;
-    animation-duration: 24s;
-    animation-delay: -6s;
-}
-
-.blob-3{
-    width: 34vw;
-    height: 34vw;
-    background: var(--rosa);
-    top: 35%;
-    left: 50%;
-    animation-duration: 21s;
-    animation-delay: -12s;
-}
-
-@keyframes moverBlob{
-    0%, 100%{
-        transform: translate(0, 0) scale(1);
-        border-radius: 50%;
-    }
-    25%{
-        transform: translate(5vw, -4vw) scale(1.15);
-        border-radius: 46% 54% 60% 40% / 50% 45% 55% 50%;
-    }
-    50%{
-        transform: translate(-3vw, 4vw) scale(0.9);
-        border-radius: 60% 40% 45% 55% / 40% 60% 40% 60%;
-    }
-    75%{
-        transform: translate(-5vw, -3vw) scale(1.1);
-        border-radius: 40% 60% 50% 50% / 55% 45% 55% 45%;
-    }
-}
-
-/* Respeta a quien prefiere menos movimiento en pantalla */
-@media (prefers-reduced-motion: reduce){
-    .blob{
-        animation: none;
-    }
+body.difuminado .fondo-video{
+    filter: blur(16px) brightness(0.55);
+    transform: scale(1.08);
 }
 
 /* ===================================
    HEADER
 =================================== */
 header{
-    background: linear-gradient(135deg, var(--cian), var(--violeta) 55%, var(--rosa));
-    background-size: 200% 200%;
-    animation: gradiente 8s ease infinite;
-    color: #0f1222;
+    background: linear-gradient(180deg, rgba(13, 17, 26, 0.95), rgba(13, 17, 26, 0.7));
+    color: var(--hielo);
     height: 110px;
     text-align: center;
     line-height: 110px;
     font-family: 'Baloo 2', sans-serif;
     font-size: 32px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.35);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 18px rgba(230, 242, 248, 0.45), 0 0 40px rgba(137, 166, 182, 0.35);
+    animation: brillo 6s ease-in-out infinite;
 }
 
-@keyframes gradiente{
-    0%{ background-position: 0% 50%; }
-    50%{ background-position: 100% 50%; }
-    100%{ background-position: 0% 50%; }
+@keyframes brillo{
+    0%, 100%{ text-shadow: 0 0 18px rgba(230, 242, 248, 0.45), 0 0 40px rgba(137, 166, 182, 0.35); }
+    50%{ text-shadow: 0 0 26px rgba(230, 242, 248, 0.7), 0 0 60px rgba(137, 166, 182, 0.5); }
 }
 
 /* ===================================
@@ -149,16 +103,18 @@ header{
 nav{
     position: relative;
     z-index: 100;
-    background: rgba(15, 18, 34, 0.75);
+    background: rgba(13, 17, 26, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 2px solid rgba(34, 211, 238, 0.4);
+    border-top: 1px solid var(--vidrio-borde);
+    border-bottom: 1px solid var(--vidrio-borde);
     padding: 0 10px;
 }
 
 .nav-menu{
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     list-style: none;
 }
 
@@ -174,10 +130,11 @@ nav{
     border: none;
     margin: 0;
     padding: 15px 18px;
-    color: var(--texto-claro);
+    color: var(--texto-suave);
     font-family: 'Baloo 2', sans-serif;
     font-size: 15px;
     font-weight: 600;
+    letter-spacing: 0.5px;
     cursor: pointer;
     position: relative;
     transition: color 0.3s ease;
@@ -185,7 +142,7 @@ nav{
 
 .nav-link:hover,
 .nav-item.open .nav-link{
-    color: var(--cian);
+    color: var(--hielo);
 }
 
 .nav-link::after{
@@ -194,8 +151,9 @@ nav{
     left: 18px;
     bottom: 10px;
     width: 0%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--cian), var(--rosa));
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--hielo), transparent);
+    box-shadow: 0 0 8px rgba(230, 242, 248, 0.6);
     transition: width 0.3s ease;
 }
 
@@ -219,14 +177,14 @@ nav{
     left: 0;
     min-width: 210px;
     list-style: none;
-    background: rgba(15, 18, 34, 0.94);
+    background: rgba(13, 17, 26, 0.92);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--vidrio-borde);
     border-radius: 14px;
     padding: 8px;
     margin-top: 10px;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px) scale(0.96);
@@ -258,8 +216,8 @@ nav{
 }
 
 .dropdown-menu a:hover{
-    background: linear-gradient(90deg, rgba(34, 211, 238, 0.18), rgba(244, 114, 182, 0.18));
-    color: var(--texto-claro);
+    background: rgba(183, 202, 219, 0.12);
+    color: var(--hielo);
     transform: translateX(4px);
 }
 
@@ -269,13 +227,13 @@ nav{
 #contenido{
     max-width: 1100px;
     margin: 32px auto 48px;
-    background: var(--panel);
+    background: var(--vidrio);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--vidrio-borde);
     padding: 36px;
     border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
 /* Oculta la galería hasta que se acceda desde Contenido > Recursos */
@@ -298,7 +256,8 @@ nav{
 .gallery h2{
     font-family: 'Baloo 2', sans-serif;
     font-size: 22px;
-    color: var(--texto-claro);
+    letter-spacing: 1px;
+    color: var(--hielo);
     margin-bottom: 20px;
 }
 
@@ -312,8 +271,8 @@ nav{
     margin: 0;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--vidrio-borde);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -327,7 +286,7 @@ nav{
 
 .gallery-item:hover{
     transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 14px 32px rgba(34, 211, 238, 0.35);
+    box-shadow: 0 14px 32px rgba(183, 202, 219, 0.25);
 }
 
 /* ===================================
@@ -338,7 +297,7 @@ nav{
     position: fixed;
     inset: 0;
     z-index: 999;
-    background: rgba(5, 6, 15, 0.85);
+    background: rgba(8, 11, 17, 0.85);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     align-items: center;
@@ -360,8 +319,8 @@ nav{
     position: relative;
     max-width: min(900px, 90vw);
     max-height: 85vh;
-    background: var(--panel);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--vidrio);
+    border: 1px solid var(--vidrio-borde);
     border-radius: 20px;
     padding: 18px;
     display: flex;
@@ -386,13 +345,13 @@ nav{
     height: 36px;
     border: none;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--cian), var(--rosa));
-    color: #0f1222;
+    background: var(--hielo);
+    color: var(--fondo);
     font-size: 20px;
     font-weight: 800;
     line-height: 1;
     cursor: pointer;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 14px rgba(230, 242, 248, 0.5);
     transition: transform 0.2s ease;
 }
 
@@ -403,10 +362,10 @@ nav{
 .lightbox-download{
     display: inline-block;
     padding: 10px 22px;
-    border: none;
+    border: 1px solid rgba(230, 242, 248, 0.4);
     border-radius: 999px;
-    background: linear-gradient(90deg, var(--cian), var(--violeta));
-    color: #fff;
+    background: linear-gradient(90deg, var(--profundo), var(--acero));
+    color: var(--hielo);
     font-family: 'Baloo 2', sans-serif;
     font-size: 15px;
     font-weight: 700;
@@ -417,5 +376,5 @@ nav{
 
 .lightbox-download:hover{
     transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(124, 58, 237, 0.4);
+    box-shadow: 0 0 20px rgba(183, 202, 219, 0.45);
 }

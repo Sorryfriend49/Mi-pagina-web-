@@ -13,11 +13,11 @@
 
 <body>
 
-    <!-- FONDO GLOBAL: blobs fijos, siempre visibles sin importar la sección -->
+    <!-- FONDO GLOBAL: video fijo. Nítido en Inicio, difuminado en los demás apartados -->
     <div class="fondo-global" aria-hidden="true">
-        <span class="blob blob-1"></span>
-        <span class="blob blob-2"></span>
-        <span class="blob blob-3"></span>
+        <video class="fondo-video" id="fondoVideo" autoplay muted loop playsinline preload="auto" poster="Video/fondo-poster.jpg">
+            <source src="Video/fondo.mp4" type="video/mp4">
+        </video>
     </div>
 
     <header>
@@ -27,7 +27,7 @@
     <nav aria-label="Navegación principal">
         <ul class="nav-menu" id="navMenu">
 
-            <li class="nav-item">
+            <li class="nav-item" data-grupo="inicio">
                 <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
                     Inicio
                     <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -161,7 +161,10 @@
         // Contenido > Recursos; cualquier otra opción la vuelve a ocultar.
         const seccionContenido = document.getElementById('contenido');
 
-        function mostrarApartado(esRecursos){
+        function mostrarApartado(esRecursos, esInicio){
+            // Video nítido solo en Inicio; difuminado en cualquier otro apartado
+            document.body.classList.toggle('difuminado', !esInicio);
+
             if (esRecursos){
                 seccionContenido.classList.remove('oculta', 'visible');
                 void seccionContenido.offsetWidth; // reinicia la animación de entrada
@@ -176,10 +179,27 @@
         document.querySelectorAll('.dropdown-menu a').forEach(enlace => {
             enlace.addEventListener('click', (e) => {
                 e.preventDefault();
-                mostrarApartado(enlace.id === 'linkRecursos');
+                const esInicio = enlace.closest('.nav-item').dataset.grupo === 'inicio';
+                mostrarApartado(enlace.id === 'linkRecursos', esInicio);
                 setTimeout(cerrarMenus, 150);
             });
         });
+
+        // ===== VIDEO DE FONDO =====
+        // El video empieza justo debajo del menú para que el halo no quede tapado
+        const cabecera = document.querySelector('header');
+        const menu = document.querySelector('nav');
+        function ajustarAltoCabecera(){
+            const alto = cabecera.offsetHeight + menu.offsetHeight;
+            document.documentElement.style.setProperty('--alto-cabecera', alto + 'px');
+        }
+        ajustarAltoCabecera();
+        window.addEventListener('resize', ajustarAltoCabecera);
+
+        // Respeta a quien prefiere menos movimiento: deja el video quieto
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+            document.getElementById('fondoVideo').pause();
+        }
 
         const galleryImgs = document.querySelectorAll('.gallery-item img');
         const lightbox = document.getElementById('lightbox');
