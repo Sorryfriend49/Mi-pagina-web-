@@ -37,8 +37,8 @@
                     <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#contenido">Temario</a></li>
-                    <li><a href="#contenido">Recursos</a></li>
+                    <li><a href="#inicio">Temario</a></li>
+                    <li><a href="#contenido" id="linkRecursos">Recursos</a></li>
                 </ul>
             </li>
 
@@ -48,8 +48,8 @@
                     <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#contenido">Software necesario</a></li>
-                    <li><a href="#contenido">Conocimientos previos</a></li>
+                    <li><a href="#inicio">Software necesario</a></li>
+                    <li><a href="#inicio">Conocimientos previos</a></li>
                 </ul>
             </li>
 
@@ -59,9 +59,9 @@
                     <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#contenido">HTML</a></li>
-                    <li><a href="#contenido">CSS</a></li>
-                    <li><a href="#contenido">JavaScript</a></li>
+                    <li><a href="#inicio">HTML</a></li>
+                    <li><a href="#inicio">CSS</a></li>
+                    <li><a href="#inicio">JavaScript</a></li>
                 </ul>
             </li>
 
@@ -71,8 +71,8 @@
                     <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#contenido">Bootstrap</a></li>
-                    <li><a href="#contenido">Tailwind CSS</a></li>
+                    <li><a href="#inicio">Bootstrap</a></li>
+                    <li><a href="#inicio">Tailwind CSS</a></li>
                 </ul>
             </li>
 
@@ -82,8 +82,8 @@
                     <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#contenido">Galería</a></li>
-                    <li><a href="#contenido">Próximos proyectos</a></li>
+                    <li><a href="#inicio">Galería</a></li>
+                    <li><a href="#inicio">Próximos proyectos</a></li>
                 </ul>
             </li>
 
@@ -93,11 +93,18 @@
     <main>
 
         <section id="inicio" class="bienvenida">
-            <h2>Bienvenida</h2>
-            <p>Esta sección todavía no tiene fondo definido — lo elegimos después.</p>
+            <div class="bienvenida-fondo" aria-hidden="true">
+                <span class="blob blob-1"></span>
+                <span class="blob blob-2"></span>
+                <span class="blob blob-3"></span>
+            </div>
+            <div class="bienvenida-contenido">
+                <h2>Bienvenida</h2>
+                <p>Un rincón personal para explorar diseño, código y arte.</p>
+            </div>
         </section>
 
-        <section id="contenido" class="gallery">
+        <section id="contenido" class="gallery oculta">
             <h2>Galería</h2>
             <div class="gallery-grid">
                 <figure class="gallery-item">
@@ -152,6 +159,19 @@
         document.addEventListener('click', cerrarMenus);
         document.querySelectorAll('.dropdown-menu a').forEach(enlace => {
             enlace.addEventListener('click', () => setTimeout(cerrarMenus, 150));
+        });
+
+        // ===== GALERÍA OCULTA: solo se revela desde Contenido > Recursos =====
+        const seccionContenido = document.getElementById('contenido');
+        const linkRecursos = document.getElementById('linkRecursos');
+
+        linkRecursos.addEventListener('click', (e) => {
+            e.preventDefault();
+            seccionContenido.classList.remove('oculta');
+            seccionContenido.classList.add('visible');
+            requestAnimationFrame(() => {
+                seccionContenido.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
         });
 
         const galleryImgs = document.querySelectorAll('.gallery-item img');

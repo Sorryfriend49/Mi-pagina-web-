@@ -225,27 +225,110 @@ nav{
 }
 
 /* ===================================
-   SECCION BIENVENIDA (fondo por definir)
+   SECCION BIENVENIDA (fondo animado tipo lava lamp)
 =================================== */
 #inicio.bienvenida{
+    position: relative;
+    overflow: hidden;
     max-width: 1100px;
     margin: 48px auto 0;
-    padding: 60px 36px;
+    padding: 90px 36px;
     border-radius: 24px;
     text-align: center;
+    background: #120a21;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
-    /* TODO: definir imagen/color de fondo para esta sección */
 }
 
-#inicio.bienvenida h2{
+.bienvenida-fondo{
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.blob{
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    animation: moverBlob 20s ease-in-out infinite;
+}
+
+.blob-1{
+    width: 340px;
+    height: 340px;
+    background: var(--cian);
+    top: -80px;
+    left: -60px;
+    animation-duration: 18s;
+}
+
+.blob-2{
+    width: 400px;
+    height: 400px;
+    background: var(--violeta);
+    bottom: -100px;
+    right: -80px;
+    animation-duration: 24s;
+    animation-delay: -6s;
+}
+
+.blob-3{
+    width: 280px;
+    height: 280px;
+    background: var(--rosa);
+    top: 35%;
+    left: 50%;
+    animation-duration: 21s;
+    animation-delay: -12s;
+}
+
+@keyframes moverBlob{
+    0%, 100%{
+        transform: translate(0, 0) scale(1);
+        border-radius: 50%;
+    }
+    25%{
+        transform: translate(50px, -35px) scale(1.15);
+        border-radius: 46% 54% 60% 40% / 50% 45% 55% 50%;
+    }
+    50%{
+        transform: translate(-25px, 35px) scale(0.9);
+        border-radius: 60% 40% 45% 55% / 40% 60% 40% 60%;
+    }
+    75%{
+        transform: translate(-45px, -25px) scale(1.1);
+        border-radius: 40% 60% 50% 50% / 55% 45% 55% 45%;
+    }
+}
+
+.bienvenida-contenido{
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding: 26px 36px;
+    border-radius: 20px;
+    background: rgba(15, 18, 34, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.bienvenida-contenido h2{
     font-family: 'Baloo 2', sans-serif;
     font-size: 28px;
     margin-bottom: 10px;
 }
 
-#inicio.bienvenida p{
+.bienvenida-contenido p{
     color: var(--texto-suave);
+}
+
+/* Respeta a quien prefiere menos movimiento en pantalla */
+@media (prefers-reduced-motion: reduce){
+    .blob{
+        animation: none;
+    }
 }
 
 /* ===================================
@@ -261,6 +344,20 @@ nav{
     padding: 36px;
     border-radius: 24px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Oculta la galería hasta que se acceda desde Contenido > Recursos */
+#contenido.oculta{
+    display: none;
+}
+
+#contenido.visible{
+    animation: revelarContenido 0.6s ease forwards;
+}
+
+@keyframes revelarContenido{
+    from{ opacity: 0; transform: translateY(24px); }
+    to{ opacity: 1; transform: translateY(0); }
 }
 
 /* ===================================
