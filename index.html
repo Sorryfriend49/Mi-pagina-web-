@@ -22,6 +22,8 @@
     <!-- FONDO GLOBAL: video fijo. Nítido en Inicio, difuminado en los demás apartados -->
     <div class="fondo-global" aria-hidden="true">
         <video class="fondo-video" id="fondoVideo" autoplay muted loop playsinline preload="auto" poster="Video/fondo-poster.jpg">
+            <!-- Celular: versión recortada al centro y más liviana -->
+            <source src="Video/fondo-movil.mp4" type="video/mp4" media="(max-width: 768px)">
             <source src="Video/fondo.mp4" type="video/mp4">
         </video>
     </div>
@@ -126,7 +128,10 @@
                     <img src="Images/chibi-pulgar.webp" alt="Chibi de pelo rosa con el pulgar arriba" loading="lazy">
                 </figure>
                 <figure class="gallery-item">
-                    <img src="Images/chica-lentes-corona.jpg" alt="Chica de pelo plateado con lentes y corona" loading="lazy">
+                    <picture>
+                        <source media="(max-width: 768px)" srcset="Images/miniaturas/chica-lentes-corona.jpg">
+                        <img src="Images/chica-lentes-corona.jpg" alt="Chica de pelo plateado con lentes y corona" loading="lazy">
+                    </picture>
                 </figure>
             </div>
         </section>
@@ -180,6 +185,13 @@
             // Video nítido solo en Inicio; difuminado en cualquier otro apartado
             document.body.classList.toggle('difuminado', !esInicio);
 
+            // En celular el video se pausa mientras está difuminado: casi no se
+            // nota el movimiento y así no se recalcula el desenfoque en cada cuadro
+            if (esCelular.matches && !reducirMovimiento){
+                if (esInicio) videoFondo.play().catch(() => {});
+                else videoFondo.pause();
+            }
+
             if (esRecursos){
                 seccionContenido.classList.remove('oculta', 'visible');
                 void seccionContenido.offsetWidth; // reinicia la animación de entrada
@@ -224,10 +236,30 @@
         }
         ajustarAltoCabecera();
         window.addEventListener('resize', ajustarAltoCabecera);
+        window.addEventListener('load', ajustarAltoCabecera);
+
+        const videoFondo = document.getElementById('fondoVideo');
+        const esCelular = window.matchMedia('(max-width: 768px)');
+        const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Respeta a quien prefiere menos movimiento: deja el video quieto
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-            document.getElementById('fondoVideo').pause();
+        if (reducirMovimiento) videoFondo.pause();
+
+        if (esCelular.matches){
+            // Navegadores antiguos que ignoran media="" en <source>: forzar la versión de celular
+            const asegurarVideoMovil = () => {
+                if (!videoFondo.currentSrc.includes('fondo-movil')){
+                    videoFondo.src = 'Video/fondo-movil.mp4';
+                    if (!reducirMovimiento) videoFondo.play().catch(() => {});
+                }
+            };
+            if (videoFondo.readyState > 0) asegurarVideoMovil();
+            else videoFondo.addEventListener('loadedmetadata', asegurarVideoMovil, { once: true });
+            // Pausa el video si la pestaña queda en segundo plano (ahorra batería)
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) videoFondo.pause();
+                else if (!document.body.classList.contains('difuminado') && !reducirMovimiento) videoFondo.play().catch(() => {});
+            });
         }
 
         const lightbox = document.getElementById('lightbox');

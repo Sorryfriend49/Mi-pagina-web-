@@ -305,6 +305,12 @@ nav{
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
+.gallery-item picture{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 /* La imagen se ve completa dentro de su recuadro, sin recortes */
 .gallery-item img{
     display: block;
@@ -433,4 +439,161 @@ nav{
 .lightbox-download:hover{
     transform: translateY(-2px);
     box-shadow: 0 0 20px rgba(168, 198, 236, 0.45);
+}
+
+/* ===================================
+   SOLO CELULAR (pantallas de hasta 768px)
+   Navegación más cómoda con el dedo y menos efectos pesados.
+   En PC nada de esto aplica.
+=================================== */
+@media (max-width: 768px){
+
+    /* --- Cabecera más compacta: título en una línea y sin animación de brillo --- */
+    header{
+        min-height: 76px;
+        padding: 14px 12px;
+        animation: none;
+    }
+
+    header h1{
+        font-size: clamp(22px, 7vw, 30px);
+        letter-spacing: 1px;
+    }
+
+    /* --- Menú: cuadrícula de 3x2 con botones grandes --- */
+    nav{
+        padding: 6px;
+        background: rgba(3, 10, 19, 0.94);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .nav-menu{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+    }
+
+    /* El panel se posiciona respecto a todo el menú, no al botón */
+    .nav-item{
+        position: static;
+    }
+
+    .nav-link{
+        width: 100%;
+        min-height: 46px;
+        justify-content: center;
+        padding: 12px 4px;
+        border-radius: 10px;
+        font-size: 14px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-link::after{
+        display: none;
+    }
+
+    .nav-item.open .nav-link{
+        background: rgba(168, 198, 236, 0.12);
+    }
+
+    /* Panel a lo ancho, debajo de todo el menú: ya no tapa ningún botón */
+    .dropdown-menu,
+    .nav-item.abre-izquierda .dropdown-menu{
+        left: 8px;
+        right: 8px;
+        min-width: 0;
+        margin-top: 6px;
+        z-index: 200;
+        padding: 6px;
+        background: rgba(3, 10, 19, 0.97);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        transform: translateY(-6px);
+        transform-origin: top center;
+        transition-duration: 0.18s;
+    }
+
+    .nav-item.open .dropdown-menu{
+        transform: translateY(0);
+    }
+
+    .dropdown-menu li + li{
+        margin-top: 0;
+        border-top: 1px solid var(--vidrio-borde);
+    }
+
+    .dropdown-menu a{
+        padding: 15px 16px;
+        font-size: 16px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .dropdown-menu a:hover{
+        transform: none;
+        background: none;
+    }
+
+    .dropdown-menu a:active{
+        background: rgba(168, 198, 236, 0.18);
+        color: var(--hielo);
+    }
+
+    /* --- Video: sin máscara (costosa en cada cuadro); el borde se funde con un degradado fijo --- */
+    .fondo-video{
+        -webkit-mask-image: none;
+        mask-image: none;
+        transition: filter 0.35s ease, transform 0.35s ease;
+    }
+
+    .fondo-global::after{
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: var(--alto-cabecera);
+        height: 10vh;
+        background: linear-gradient(to bottom, var(--fondo), transparent);
+    }
+
+    body.difuminado .fondo-video{
+        filter: blur(12px) brightness(0.7);
+    }
+
+    /* --- Paneles sólidos en vez de vidrio esmerilado --- */
+    #contenido{
+        margin: 20px 12px 32px;
+        padding: 20px;
+        background: rgba(3, 10, 19, 0.82);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .gallery-grid{
+        gap: 14px;
+    }
+
+    .gallery-item{
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* En pantalla táctil no hay "pasar el mouse": la etiqueta siempre visible y sin saltos */
+    .gallery-item:hover{
+        transform: none;
+        border-color: var(--vidrio-borde);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .gallery-item::after{
+        opacity: 1;
+        transform: none;
+    }
+
+    .lightbox{
+        background: rgba(1, 5, 11, 0.94);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
 }
