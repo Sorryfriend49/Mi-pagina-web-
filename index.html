@@ -18,13 +18,75 @@
     </header>
 
     <nav aria-label="Navegación principal">
-        <ul>
-            <li><a href="#content">Inicio</a></li>
-            <li><a href="#content">Contenido</a></li>
-            <li><a href="#content">Requisitos</a></li>
-            <li><a href="#content">Lenguajes</a></li>
-            <li><a href="#content">Frameworks</a></li>
-            <li><a href="#galeria">Proyectos</a></li>
+        <ul class="nav-menu" id="navMenu">
+
+            <li class="nav-item">
+                <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+                    Inicio
+                    <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#content">Bienvenida</a></li>
+                    <li><a href="#content">Sobre el sitio</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+                    Contenido
+                    <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#content">Temario</a></li>
+                    <li><a href="#content">Recursos</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+                    Requisitos
+                    <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#content">Software necesario</a></li>
+                    <li><a href="#content">Conocimientos previos</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+                    Lenguajes
+                    <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#content">HTML</a></li>
+                    <li><a href="#content">CSS</a></li>
+                    <li><a href="#content">JavaScript</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+                    Frameworks
+                    <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#content">Bootstrap</a></li>
+                    <li><a href="#content">Tailwind CSS</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+                    Proyectos
+                    <svg class="nav-arrow" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#galeria">Galería</a></li>
+                    <li><a href="#galeria">Próximos proyectos</a></li>
+                </ul>
+            </li>
+
         </ul>
     </nav>
 
@@ -33,21 +95,6 @@
     <main>
 
         <section id="content">
-
-            <article class="article">
-                <h2>Título del artículo</h2>
-                <p>Texto del artículo</p>
-            </article>
-
-            <article class="article">
-                <h2>Título del artículo</h2>
-                <p>Texto del artículo</p>
-            </article>
-
-            <article class="article">
-                <h2>Título del artículo</h2>
-                <p>Texto del artículo</p>
-            </article>
 
             <section id="galeria" class="gallery">
                 <h2>Galería</h2>
@@ -93,6 +140,36 @@
     </div>
 
     <script>
+        // ===== MENU DESPLEGABLE =====
+        const navItems = document.querySelectorAll('.nav-item');
+
+        function cerrarMenus(){
+            navItems.forEach(item => {
+                item.classList.remove('open');
+                item.querySelector('.nav-link').setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        navItems.forEach(item => {
+            const btn = item.querySelector('.nav-link');
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const yaAbierto = item.classList.contains('open');
+                cerrarMenus();
+                if (!yaAbierto){
+                    item.classList.add('open');
+                    btn.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // Cierra el menú si se hace clic en cualquier otra parte de la página,
+        // o al elegir una opción dentro del desplegable
+        document.addEventListener('click', cerrarMenus);
+        document.querySelectorAll('.dropdown-menu a').forEach(enlace => {
+            enlace.addEventListener('click', () => setTimeout(cerrarMenus, 150));
+        });
+
         const galleryImgs = document.querySelectorAll('.gallery-item img');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightboxImg');
@@ -183,7 +260,10 @@
         });
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'Escape'){
+                closeLightbox();
+                cerrarMenus();
+            }
         });
     </script>
 
