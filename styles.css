@@ -264,13 +264,6 @@ nav{
 }
 
 /* ===================================
-   SECCION INICIO (sin contenido propio: deja ver el fondo global)
-=================================== */
-#inicio{
-    min-height: 100vh;
-}
-
-/* ===================================
    CONTENIDO PRINCIPAL
 =================================== */
 #contenido{

@@ -154,26 +154,30 @@
         // Cierra el menú si se hace clic en cualquier otra parte de la página,
         // o al elegir una opción dentro del desplegable
         document.addEventListener('click', cerrarMenus);
-        document.querySelectorAll('.dropdown-menu a').forEach(enlace => {
-            enlace.addEventListener('click', () => setTimeout(cerrarMenus, 150));
-        });
 
-        // ===== GALERÍA OCULTA: solo se revela desde Contenido > Recursos =====
+        // ===== APARTADOS TIPO PESTAÑA =====
+        // Solo se ve un apartado a la vez, justo debajo del menú, y la página
+        // vuelve arriba del todo. La galería solo se muestra desde
+        // Contenido > Recursos; cualquier otra opción la vuelve a ocultar.
         const seccionContenido = document.getElementById('contenido');
-        const linkRecursos = document.getElementById('linkRecursos');
 
-        linkRecursos.addEventListener('click', (e) => {
-            e.preventDefault();
-            seccionContenido.classList.remove('oculta');
-            seccionContenido.classList.add('visible');
-            // Doble requestAnimationFrame: asegura que el navegador ya terminó
-            // de calcular el nuevo alto de la sección (antes estaba display:none)
-            // antes de hacer scroll, para que siempre quede alineada justo
-            // arriba del todo (de arriba hacia abajo) y no a mitad de camino.
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    seccionContenido.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
+        function mostrarApartado(esRecursos){
+            if (esRecursos){
+                seccionContenido.classList.remove('oculta', 'visible');
+                void seccionContenido.offsetWidth; // reinicia la animación de entrada
+                seccionContenido.classList.add('visible');
+            } else {
+                seccionContenido.classList.add('oculta');
+                seccionContenido.classList.remove('visible');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.dropdown-menu a').forEach(enlace => {
+            enlace.addEventListener('click', (e) => {
+                e.preventDefault();
+                mostrarApartado(enlace.id === 'linkRecursos');
+                setTimeout(cerrarMenus, 150);
             });
         });
 
