@@ -668,6 +668,148 @@ nav{
 }
 
 /* ===================================
+   ELIMINAR IMÁGENES (solo administrador)
+=================================== */
+.boton-eliminar{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 34px;
+    height: 34px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(230, 242, 248, 0.3);
+    background: rgba(3, 10, 19, 0.8);
+    color: var(--hielo);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+body.modo-admin .boton-eliminar{
+    display: flex;
+}
+
+.boton-eliminar:hover,
+.boton-eliminar:focus-visible{
+    background: rgba(214, 69, 98, 0.9);
+    border-color: transparent;
+    color: #ffffff;
+    transform: scale(1.08);
+}
+
+.gallery-item.saliendo{
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Mensajes cuando la galería está vacía o no carga */
+.gallery-grid:empty::before{
+    content: "Todavía no hay imágenes en la galería.";
+    grid-column: 1 / -1;
+    padding: 30px 0;
+    text-align: center;
+    color: var(--texto-suave);
+}
+
+.gallery-grid[data-estado="cargando"]:empty::before{
+    content: "Cargando galería…";
+}
+
+.gallery-grid[data-estado="error"]:empty::before{
+    content: "No se pudo cargar la galería. Recarga la página para intentarlo de nuevo.";
+}
+
+.panel-confirmar{
+    width: min(400px, calc(100vw - 32px));
+    text-align: center;
+}
+
+.panel-confirmar h3{
+    margin: 0 0 14px;
+}
+
+.confirmar-previa{
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    margin: 0 auto 14px;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.confirmar-botones{
+    display: flex;
+    gap: 10px;
+}
+
+.boton-secundario,
+.boton-peligro{
+    flex: 1;
+    padding: 12px;
+    border-radius: 999px;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.boton-secundario{
+    border: 1px solid var(--vidrio-borde);
+    background: transparent;
+    color: var(--texto-claro);
+}
+
+.boton-secundario:hover:not(:disabled){
+    background: rgba(168, 198, 236, 0.1);
+}
+
+.boton-peligro{
+    border: 1px solid rgba(255, 179, 191, 0.4);
+    background: linear-gradient(90deg, #7a2338, #c2415d);
+    color: #ffffff;
+}
+
+.boton-peligro:hover:not(:disabled){
+    box-shadow: 0 0 20px rgba(214, 69, 98, 0.45);
+}
+
+.boton-secundario:disabled,
+.boton-peligro:disabled{
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.aviso{
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 1000;
+    max-width: calc(100vw - 32px);
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--vidrio-borde);
+    background: rgba(3, 10, 19, 0.94);
+    color: var(--hielo);
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translate(-50%, 16px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.aviso.visible{
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* ===================================
    SOLO CELULAR (pantallas de hasta 768px)
    Navegación más cómoda con el dedo y menos efectos pesados.
    En PC nada de esto aplica.
@@ -837,6 +979,9 @@ nav{
 
     .boton-agregar,
     .boton-principal,
+    .boton-secundario,
+    .boton-peligro,
+    .boton-eliminar,
     .enlace-discreto,
     .zona-archivos{
         touch-action: manipulation;
@@ -845,5 +990,15 @@ nav{
 
     .campo{
         font-size: 16px;   /* evita que iPhone haga zoom al escribir */
+    }
+
+    /* Botón de eliminar más grande para el dedo */
+    .boton-eliminar{
+        width: 40px;
+        height: 40px;
+    }
+
+    .boton-eliminar:hover{
+        transform: none;
     }
 }

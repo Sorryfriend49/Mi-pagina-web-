@@ -36,10 +36,20 @@
     const estadoSubir = document.getElementById('estadoSubir');
     const botonDesconectar = document.getElementById('botonDesconectar');
     const botonCerrarPanel = document.getElementById('botonCerrarPanel');
+    const panelEliminar = document.getElementById('panelEliminar');
+    const previaEliminar = document.getElementById('previaEliminar');
+    const botonCancelarEliminar = document.getElementById('botonCancelarEliminar');
+    const botonConfirmarEliminar = document.getElementById('botonConfirmarEliminar');
+    const estadoEliminar = document.getElementById('estadoEliminar');
+    const aviso = document.getElementById('aviso');
 
     let archivosElegidos = [];
     let urlsPrevias = [];
     let subiendo = false;
+    let eliminando = false;
+    let recuadroPorEliminar = null;
+
+    const ICONO_BASURA = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
     // ---------- Token (solo en este navegador) ----------
     function leerToken(){ try { return localStorage.getItem(CLAVE_TOKEN) || ''; } catch { return ''; } }
@@ -52,9 +62,23 @@
     }
 
     // ---------- Pintar la galería ----------
+    // datos: { archivo, alt, miniatura?, nombre?, ruta?, rutaMiniatura? }
+    // "ruta" y "rutaMiniatura" son las rutas reales en el repositorio cuando "archivo"
+    // es una vista previa local (imágenes recién subidas).
     function crearItem(datos){
         const recuadro = document.createElement('figure');
         recuadro.className = 'gallery-item';
+        recuadro.dataset.archivo = datos.ruta || datos.archivo;
+        if (datos.rutaMiniatura || datos.miniatura) recuadro.dataset.miniatura = datos.rutaMiniatura || datos.miniatura;
+
+        // Botón de eliminar: solo se ve en modo administrador (ver CSS)
+        const borrar = document.createElement('button');
+        borrar.type = 'button';
+        borrar.className = 'boton-eliminar';
+        borrar.setAttribute('aria-label', 'Eliminar imagen');
+        borrar.title = 'Eliminar imagen';
+        borrar.innerHTML = ICONO_BASURA;
+        recuadro.append(borrar);
 
         const img = document.createElement('img');
         img.src = datos.archivo;
@@ -79,23 +103,21 @@
     async function cargarGaleria(){
         try{
             const respuesta = await fetch('galeria.json?v=' + Date.now(), { cache: 'no-store' });
-            if (!respuesta.ok) return;
+            if (!respuesta.ok) throw new Error('sin galeria.json');
             const datos = await respuesta.json();
-            if (Array.isArray(datos.imagenes) && datos.imagenes.length){
-                grid.replaceChildren(...datos.imagenes.map(crearItem));
-            }
+            grid.replaceChildren(...(datos.imagenes || []).map(crearItem));
+            delete grid.dataset.estado;
         } catch {
-            // Sin galeria.json (p. ej. abriendo el HTML en local): se quedan las del HTML
+            // P. ej. abriendo el HTML en local (file://), donde el navegador no deja leer el archivo
+            grid.dataset.estado = 'error';
         }
     }
 
     // Lista actual tomada de la página (respaldo si galeria.json no existiera)
     function galeriaDesdeLaPagina(){
         return [...grid.querySelectorAll('.gallery-item')].map(recuadro => {
-            const img = recuadro.querySelector('img');
-            const fuente = recuadro.querySelector('source');
-            const datos = { archivo: img.getAttribute('src'), alt: img.alt };
-            if (fuente) datos.miniatura = fuente.getAttribute('srcset');
+            const datos = { archivo: recuadro.dataset.archivo, alt: recuadro.querySelector('img').alt };
+            if (recuadro.dataset.miniatura) datos.miniatura = recuadro.dataset.miniatura;
             return datos;
         }).filter(d => d.archivo && !d.archivo.startsWith('blob:'));
     }
@@ -273,6 +295,97 @@
         }
     }
 
+    // ---------- Eliminar: un solo commit que borra los archivos y actualiza galeria.json ----------
+    async function eliminarDelRepositorio(archivo, miniatura){
+        for (let intento = 1; intento <= 3; intento++){
+            const ref = await gh('/git/ref/heads/' + RAMA);
+            const padre = ref.object.sha;
+            const commitPadre = await gh('/git/commits/' + padre);
+            const arbolActual = await gh('/git/trees/' + commitPadre.tree.sha + '?recursive=1');
+            const existentes = new Set(arbolActual.tree.filter(e => e.type === 'blob').map(e => e.path));
+
+            let galeria;
+            try {
+                const actual = await gh('/contents/galeria.json?ref=' + padre);
+                galeria = JSON.parse(base64AUtf8(actual.content));
+            } catch (error){
+                if (error.status !== 404) throw error;
+                galeria = { imagenes: galeriaDesdeLaPagina() };
+            }
+
+            const lista = galeria.imagenes || [];
+            const entrada = lista.find(i => i.archivo === archivo);
+            galeria.imagenes = lista.filter(i => i.archivo !== archivo);
+
+            // Archivos a borrar: la imagen y su miniatura, solo dentro de Images/,
+            // solo si existen y si ninguna otra imagen de la galería los usa
+            const enUso = new Set(galeria.imagenes.flatMap(i => [i.archivo, i.miniatura]).filter(Boolean));
+            const rutas = [...new Set([archivo, miniatura, entrada && entrada.miniatura])]
+                .filter(r => r && r.startsWith('Images/') && existentes.has(r) && !enUso.has(r));
+
+            if (!entrada && !rutas.length) return;   // ya estaba eliminada
+
+            const arbol = await gh('/git/trees', { method: 'POST', body: JSON.stringify({
+                base_tree: commitPadre.tree.sha,
+                tree: [
+                    ...rutas.map(path => ({ path, mode: '100644', type: 'blob', sha: null })),
+                    { path: 'galeria.json', mode: '100644', type: 'blob', content: JSON.stringify(galeria, null, 2) + '\n' }
+                ]
+            }) });
+            const commit = await gh('/git/commits', { method: 'POST', body: JSON.stringify({
+                message: 'Elimina una imagen de la galería desde la página', tree: arbol.sha, parents: [padre]
+            }) });
+
+            try {
+                await gh('/git/refs/heads/' + RAMA, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) });
+                return;
+            } catch (error){
+                if (error.status !== 422 || intento === 3) throw error;
+            }
+        }
+    }
+
+    function abrirConfirmarEliminar(recuadro){
+        if (subiendo || eliminando) return;
+        recuadroPorEliminar = recuadro;
+        const img = recuadro.querySelector('img');
+        previaEliminar.src = img.currentSrc || img.src;
+        estado(estadoEliminar, '');
+        botonConfirmarEliminar.disabled = false;
+        botonCancelarEliminar.disabled = false;
+        panelEliminar.showModal();
+    }
+
+    async function alConfirmarEliminar(){
+        if (!recuadroPorEliminar || eliminando) return;
+        eliminando = true;
+        botonConfirmarEliminar.disabled = true;
+        botonCancelarEliminar.disabled = true;
+        estado(estadoEliminar, 'Eliminando…');
+        const recuadro = recuadroPorEliminar;
+        try {
+            await eliminarDelRepositorio(recuadro.dataset.archivo, recuadro.dataset.miniatura);
+            panelEliminar.close();
+            recuadro.classList.add('saliendo');
+            setTimeout(() => recuadro.remove(), 300);
+            mostrarAviso('Imagen eliminada. Para los demás visitantes desaparece en 1 o 2 minutos.');
+        } catch (error){
+            estado(estadoEliminar, mensajeDeError(error), 'error');
+            botonConfirmarEliminar.disabled = false;
+        } finally {
+            eliminando = false;
+            botonCancelarEliminar.disabled = false;
+        }
+    }
+
+    let temporizadorAviso;
+    function mostrarAviso(texto){
+        aviso.textContent = texto;
+        aviso.classList.add('visible');
+        clearTimeout(temporizadorAviso);
+        temporizadorAviso = setTimeout(() => aviso.classList.remove('visible'), 4500);
+    }
+
     // ---------- Interfaz del panel ----------
     function estado(elemento, texto, tipo = ''){
         elemento.textContent = texto;
@@ -349,8 +462,15 @@
 
             // Se muestran de inmediato en esta página (para los demás, en 1-2 minutos)
             nuevas.forEach((datos, i) => {
-                grid.append(crearItem({ archivo: preparadas[i].vistaPrevia, alt: datos.alt, nombre: datos.archivo.split('/').pop() }));
+                grid.append(crearItem({
+                    archivo: preparadas[i].vistaPrevia,
+                    ruta: datos.archivo,
+                    rutaMiniatura: datos.miniatura,
+                    alt: datos.alt,
+                    nombre: datos.archivo.split('/').pop()
+                }));
             });
+            delete grid.dataset.estado;
             limpiarSeleccion();
             campoDescripcion.value = '';
             estado(estadoSubir, nuevas.length === 1
@@ -407,6 +527,15 @@
     ['dragenter', 'dragover'].forEach(tipo => zonaArchivos.addEventListener(tipo, e => { e.preventDefault(); zonaArchivos.classList.add('arrastrando'); }));
     ['dragleave', 'drop'].forEach(tipo => zonaArchivos.addEventListener(tipo, () => zonaArchivos.classList.remove('arrastrando')));
     zonaArchivos.addEventListener('drop', e => { e.preventDefault(); elegirArchivos(e.dataTransfer.files); });
+
+    grid.addEventListener('click', e => {
+        const boton = e.target.closest('.boton-eliminar');
+        if (boton && document.body.classList.contains('modo-admin')) abrirConfirmarEliminar(boton.closest('.gallery-item'));
+    });
+    botonConfirmarEliminar.addEventListener('click', alConfirmarEliminar);
+    botonCancelarEliminar.addEventListener('click', () => panelEliminar.close());
+    panelEliminar.addEventListener('cancel', e => { if (eliminando) e.preventDefault(); });
+    panelEliminar.addEventListener('click', e => { if (e.target === panelEliminar && !eliminando) panelEliminar.close(); });
 
     botonDesconectar.addEventListener('click', () => {
         borrarToken();

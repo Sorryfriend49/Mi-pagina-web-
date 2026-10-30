@@ -115,30 +115,8 @@
                 <!-- Solo aparece en el navegador donde conectaste tu token (?admin) -->
                 <button class="boton-agregar" id="botonAgregar" type="button" hidden>+ Agregar imagen</button>
             </div>
-            <!-- Estas imágenes son el respaldo; la galería real se carga desde galeria.json -->
-            <div class="gallery-grid" id="galeriaGrid">
-                <figure class="gallery-item">
-                    <img src="Images/yeison.png" alt="Ilustración de Yeison" loading="lazy">
-                </figure>
-                <figure class="gallery-item">
-                    <img src="Images/FB_IMG_1771161963658.jpg" alt="Foto guardada desde Facebook" loading="lazy">
-                </figure>
-                <figure class="gallery-item">
-                    <img src="Images/illust_100641790_20260103_205830.png" alt="Ilustración estilo anime" loading="lazy">
-                </figure>
-                <figure class="gallery-item">
-                    <img src="Images/chica-maid-rosa.jpg" alt="Chica de pelo rosa con traje de maid" loading="lazy">
-                </figure>
-                <figure class="gallery-item">
-                    <img src="Images/chibi-pulgar.webp" alt="Chibi de pelo rosa con el pulgar arriba" loading="lazy">
-                </figure>
-                <figure class="gallery-item">
-                    <picture>
-                        <source media="(max-width: 768px)" srcset="Images/miniaturas/chica-lentes-corona.jpg">
-                        <img src="Images/chica-lentes-corona.jpg" alt="Chica de pelo plateado con lentes y corona" loading="lazy">
-                    </picture>
-                </figure>
-            </div>
+            <!-- Las imágenes se cargan desde galeria.json (ver galeria.js) -->
+            <div class="gallery-grid" id="galeriaGrid" data-estado="cargando"></div>
         </section>
 
     </main>
@@ -182,6 +160,21 @@
             <button class="enlace-discreto" id="botonDesconectar" type="button">Desconectar este navegador</button>
         </div>
     </dialog>
+
+    <!-- CONFIRMAR ANTES DE ELIMINAR (solo administrador) -->
+    <dialog class="panel-subida panel-confirmar" id="panelEliminar" aria-labelledby="tituloEliminar">
+        <h3 id="tituloEliminar">¿Eliminar esta imagen?</h3>
+        <img class="confirmar-previa" id="previaEliminar" src="" alt="">
+        <p class="panel-texto">Se borrará de la galería para todos los visitantes.</p>
+        <div class="confirmar-botones">
+            <button class="boton-secundario" id="botonCancelarEliminar" type="button">Cancelar</button>
+            <button class="boton-peligro" id="botonConfirmarEliminar" type="button">Eliminar</button>
+        </div>
+        <p class="estado" id="estadoEliminar" role="status"></p>
+    </dialog>
+
+    <!-- AVISO FLOTANTE -->
+    <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
 
     <script>
         // ===== MENU DESPLEGABLE =====
@@ -385,6 +378,7 @@
 
         // Un solo detector para toda la galería: funciona también con las imágenes agregadas después
         document.getElementById('galeriaGrid').addEventListener('click', (e) => {
+            if (e.target.closest('.boton-eliminar')) return;   // ese botón lo maneja galeria.js
             const recuadro = e.target.closest('.gallery-item');
             if (recuadro) openLightbox(recuadro.querySelector('img'));
         });
