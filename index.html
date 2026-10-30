@@ -110,8 +110,13 @@
         <section id="inicio"></section>
 
         <section id="contenido" class="gallery oculta">
-            <h2>Galería</h2>
-            <div class="gallery-grid">
+            <div class="gallery-header">
+                <h2>Galería</h2>
+                <!-- Solo aparece en el navegador donde conectaste tu token (?admin) -->
+                <button class="boton-agregar" id="botonAgregar" type="button" hidden>+ Agregar imagen</button>
+            </div>
+            <!-- Estas imágenes son el respaldo; la galería real se carga desde galeria.json -->
+            <div class="gallery-grid" id="galeriaGrid">
                 <figure class="gallery-item">
                     <img src="Images/yeison.png" alt="Ilustración de Yeison" loading="lazy">
                 </figure>
@@ -146,6 +151,37 @@
             <button id="lightboxDownload" class="lightbox-download" type="button">Descargar imagen</button>
         </div>
     </div>
+
+    <!-- PANEL PARA AGREGAR IMÁGENES (solo administrador) -->
+    <dialog class="panel-subida" id="panelSubida" aria-labelledby="tituloPanel">
+        <button class="lightbox-close" id="botonCerrarPanel" type="button" aria-label="Cerrar">&times;</button>
+
+        <div id="vistaConectar">
+            <h3 id="tituloPanel">Conectar con GitHub</h3>
+            <p class="panel-texto">Para publicar imágenes desde la página, pega un token de GitHub. Se guarda solo en este navegador.</p>
+            <ol class="pasos-token">
+                <li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">esta página de GitHub</a> para crear un token.</li>
+                <li>En <b>Repository access</b> elige <b>Only select repositories</b> y marca <b>Mi-pagina-web-</b>.</li>
+                <li>En <b>Permissions</b>, pon <b>Contents</b> en <b>Read and write</b>. Genera el token y cópialo.</li>
+            </ol>
+            <input class="campo" type="password" id="campoToken" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+            <button class="boton-principal" id="botonConectar" type="button">Conectar</button>
+            <p class="estado" id="estadoConectar" role="status"></p>
+        </div>
+
+        <div id="vistaSubir" hidden>
+            <h3>Agregar imágenes</h3>
+            <label class="zona-archivos" id="zonaArchivos" for="campoArchivos">
+                <input type="file" id="campoArchivos" accept="image/*" multiple>
+                <span id="textoArchivos">Toca o arrastra aquí tus imágenes</span>
+            </label>
+            <div class="previas" id="previas"></div>
+            <input class="campo" type="text" id="campoDescripcion" placeholder="Descripción (opcional)" maxlength="120">
+            <button class="boton-principal" id="botonPublicar" type="button" disabled>Publicar</button>
+            <p class="estado" id="estadoSubir" role="status"></p>
+            <button class="enlace-discreto" id="botonDesconectar" type="button">Desconectar este navegador</button>
+        </div>
+    </dialog>
 
     <script>
         // ===== MENU DESPLEGABLE =====
@@ -274,7 +310,7 @@
             lightboxImg.src = img.src;
             lightboxImg.alt = img.alt;
             currentImgUrl = img.src;
-            currentImgName = img.src.split('/').pop();
+            currentImgName = img.dataset.nombre || img.src.split('/').pop();
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -347,8 +383,10 @@
             document.body.style.overflow = '';
         }
 
-        document.querySelectorAll('.gallery-item').forEach(recuadro => {
-            recuadro.addEventListener('click', () => openLightbox(recuadro.querySelector('img')));
+        // Un solo detector para toda la galería: funciona también con las imágenes agregadas después
+        document.getElementById('galeriaGrid').addEventListener('click', (e) => {
+            const recuadro = e.target.closest('.gallery-item');
+            if (recuadro) openLightbox(recuadro.querySelector('img'));
         });
 
         lightboxClose.addEventListener('click', closeLightbox);
@@ -365,6 +403,7 @@
             }
         });
     </script>
+    <script src="galeria.js"></script>
 
 </body>
 

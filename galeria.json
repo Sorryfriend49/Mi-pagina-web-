@@ -1,0 +1,29 @@
+{
+  "imagenes": [
+    {
+      "archivo": "Images/yeison.png",
+      "alt": "Ilustración de Yeison"
+    },
+    {
+      "archivo": "Images/FB_IMG_1771161963658.jpg",
+      "alt": "Foto guardada desde Facebook"
+    },
+    {
+      "archivo": "Images/illust_100641790_20260103_205830.png",
+      "alt": "Ilustración estilo anime"
+    },
+    {
+      "archivo": "Images/chica-maid-rosa.jpg",
+      "alt": "Chica de pelo rosa con traje de maid"
+    },
+    {
+      "archivo": "Images/chibi-pulgar.webp",
+      "alt": "Chibi de pelo rosa con el pulgar arriba"
+    },
+    {
+      "archivo": "Images/chica-lentes-corona.jpg",
+      "alt": "Chica de pelo plateado con lentes y corona",
+      "miniatura": "Images/miniaturas/chica-lentes-corona.jpg"
+    }
+  ]
+}
